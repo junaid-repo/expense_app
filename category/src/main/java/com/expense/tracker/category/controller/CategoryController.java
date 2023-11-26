@@ -37,7 +37,7 @@ public class CategoryController {
 		List<CategoryEntity> categories = catServ.findAllCat();
 		return ResponseEntity.status(HttpStatus.OK).body(categories);
 	}
-	@GetMapping("/get/categoryName")
+	@GetMapping("/get/{categoryName}")
 	ResponseEntity<CategoryEntity> searchCategory(@PathVariable String categoryName){
 		
 		CategoryEntity response = new CategoryEntity();
