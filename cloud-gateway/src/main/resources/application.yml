@@ -1,0 +1,57 @@
+server:
+   port: 9000
+spring:
+   application:
+      name: CLOUD-GATEWAY
+
+   cloud:
+      gateway:
+         routes:
+         -  id: ACCOUNTS-SERVICE
+            uri: lb://ACCOUNTS-SERVICE
+            predicates:
+            - Path=/expense/accounts/**
+            filters:
+            - AuthenticationFilter
+
+         -  id: ANALYSIS-SERVICE
+            uri: lb://ANALYSIS-SERVICE
+            predicates:
+            - Path=/expense/analysis/**
+            filters:
+            - AuthenticationFilter
+
+         -  id: BUDGETS-SERVICE
+            uri: lb://BUDGETS-SERVICE
+            predicates:
+            - Path=/expense/budgets/**
+            filters:
+            - AuthenticationFilter
+
+         -  id: CATEGORY-SERVICE
+            uri: lb://CATEGORY-SERVICE
+            predicates:
+            - Path=/expense/category/**
+            filters:
+            - AuthenticationFilter
+
+         -  id: RECORD-SERVICE
+            uri: lb://RECORD-SERVICE
+            predicates:
+            - Path=/expense/record/**
+            filters:
+            - AuthenticationFilter
+
+         -  id: USER-SERVICE
+            uri: lb://USER-SERVICE
+            predicates:
+            - Path=/expense/user/**
+            filters:
+            - AuthenticationFilter
+
+eureka:
+   client:
+      fetch-registry: true
+      register-with-eureka: true
+      service-url:
+         defaultZone: http://localhost:8761/eureka
