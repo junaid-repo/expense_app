@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.expense.tracker.records.vo.AuthRequest;
 
 
-@Service
+
 @FeignClient(name="USER-SERVICE")
 public interface RecordServiceFeignClient {
 	
-	@PostMapping("/auth/generateToken")
+	@PostMapping("/expense/user/auth/generateToken")
 	ResponseEntity<String> generateToken(@RequestBody AuthRequest creds);
 
 }

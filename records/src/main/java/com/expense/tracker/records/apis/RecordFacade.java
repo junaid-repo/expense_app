@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,6 +29,8 @@ public class RecordFacade {
 
 	public void updateSpent(UpdateBudgetDTO updateBud) {
 		HttpEntity<UpdateBudgetDTO> request = new HttpEntity<>(updateBud, httpHeaders());
+		String uri="http://"+"BUDGETS-SERVICE"+"/expense/budgets/update";
+		ResponseEntity<String> response=restTemplate.exchange(uri, HttpMethod.PUT, request, String.class);
 	}
 
 	private HttpHeaders httpHeaders() {
@@ -38,7 +42,7 @@ public class RecordFacade {
 
 	public String getJwtToken() {
 		AuthRequest auth = new AuthRequest();
-		auth.setUsername("nana1");
+		auth.setUsername("nana3");
 		auth.setPassword("na");
 		String token = rfc.generateToken(auth).getBody();
 		log.info("The generated token in RecordFacade class is-->>" + token);
