@@ -35,8 +35,8 @@ spring:
             filters:
             - AuthenticationFilter
 
-         -  id: RECORD-SERVICE
-            uri: lb://RECORD-SERVICE
+         -  id: RECORDS-SERVICE
+            uri: lb://RECORDS-SERVICE
             predicates:
             - Path=/expense/record/**
             filters:

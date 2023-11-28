@@ -1,8 +1,8 @@
-package com.expense.tracker.budgets.entity;
+package com.expense.tracker.records.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
+import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,22 +13,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+@Table(name = "records")
 @Entity
-@Table(name = "budgetDetails")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BudgetEntity {
+public class RecordEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer Id;
-	private Month month = LocalDate.now().getMonth();
+	private Integer id;
+
 	private LocalDateTime createdDate = LocalDateTime.now();
+	private LocalDate date = LocalDate.now();
 
+	private LocalTime time = LocalTime.now();
+	private String type;
+	private String account;
 	private String category;
-	private Double limits;
-	private Double spent;
-	private Double remaining;
-
+	private String notes;
+	private Double amount;
 }

@@ -26,4 +26,9 @@ public class CateService {
 		return catRepo.findAll();
 	}
 
+	public CategoryEntity findCategory(String categoryName) {
+		
+		return catRepo.findById(categoryName).get();
+	}
+
 }

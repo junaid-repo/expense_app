@@ -1,12 +1,12 @@
 package com.expense.tracker.category.controller;
 
 import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +36,14 @@ public class CategoryController {
 
 		List<CategoryEntity> categories = catServ.findAllCat();
 		return ResponseEntity.status(HttpStatus.OK).body(categories);
+	}
+	@GetMapping("/get/{categoryName}")
+	ResponseEntity<CategoryEntity> searchCategory(@PathVariable String categoryName){
+		
+		CategoryEntity response = new CategoryEntity();
+		
+		response=catServ.findCategory(categoryName);
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 }
