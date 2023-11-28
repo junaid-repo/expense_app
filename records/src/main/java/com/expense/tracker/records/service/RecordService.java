@@ -2,6 +2,7 @@ package com.expense.tracker.records.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -10,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.expense.tracker.records.apis.RecordFacade;
+import com.expense.tracker.records.dto.RecordHistoryDto;
 import com.expense.tracker.records.dto.RecordList;
 import com.expense.tracker.records.entity.RecordEntity;
+import com.expense.tracker.records.entity.RecordHistoryEntity;
+import com.expense.tracker.records.repository.RecordHistoryRepository;
 import com.expense.tracker.records.repository.RecordSaveRepository;
 import com.expense.tracker.records.vo.UpdateBudgetDTO;
 
@@ -20,6 +24,8 @@ public class RecordService {
 
 	@Autowired
 	RecordSaveRepository recordRepo;
+	@Autowired
+	RecordHistoryRepository recordHisRepo;
 
 	@Autowired
 	RecordFacade rf;
@@ -28,9 +34,48 @@ public class RecordService {
 	public String addRecord(RecordEntity records) {
 
 		RecordEntity res = new RecordEntity();
+		records.setDate(records.getDate().plusDays(1));
 		res = recordRepo.save(records);
 
 		if (res != null) {
+
+			String recordsIds = "";
+			RecordHistoryEntity rhe = new RecordHistoryEntity();
+			LocalDate d1 = records.getDate();
+			try {
+				rhe = recordHisRepo.findIdsByDate(d1);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if (rhe != null) {
+				recordsIds = rhe.getRecordIds();
+				recordsIds = recordsIds + "##" + records.getId();
+				RecordHistoryEntity rce = new RecordHistoryEntity();
+				RecordHistoryEntity rce2 = new RecordHistoryEntity();
+
+				// rce.setDate(d1);
+				rhe.setRecordIds(recordsIds);
+				try {
+					rce2 = recordHisRepo.save(rhe);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				RecordHistoryEntity rhe2 = new RecordHistoryEntity();
+				rhe2.setRecordIds(String.valueOf(records.getId()));
+				rhe2.setDate(records.getDate());
+				RecordHistoryEntity rce2 = new RecordHistoryEntity();
+
+				try {
+					rce2 = recordHisRepo.save(rhe2);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 
 			UpdateBudgetDTO updateBud = new UpdateBudgetDTO();
 			updateBud.setCategory(records.getCategory());
@@ -50,15 +95,41 @@ public class RecordService {
 
 		List<RecordEntity> recordList = new ArrayList();
 
-		recordList = recordRepo.findByMonthYear(monthYear);
+		//recordList = recordRepo.findByMonthYear(monthYear);
 
-		log.info("The output record --> " + recordList);
-		
-		recordList.forEach(obj->{
-			LocalDate d1=obj.getDate();
-		});
+		//log.info("The output record --> " + recordList);
 
-		return null;
+		List<RecordHistoryEntity> rheList = new ArrayList<>();
+
+		rheList = recordHisRepo.findByMonthYear(monthYear);
+		RecordList rl = new RecordList();
+		for (RecordHistoryEntity rhe : rheList) {
+			LocalDate resDate = rhe.getDate();
+			String recordsId = rhe.getRecordIds();
+
+			String[] idsArr = recordsId.split("##");
+			List<String> idsList = Arrays.asList(idsArr);
+
+			rl.setDate(resDate);
+			List<RecordHistoryDto> details = new ArrayList<>();
+			for (String ids : idsList) {
+
+				RecordHistoryDto rhd = new RecordHistoryDto();
+
+				RecordEntity re = new RecordEntity();
+				re = recordRepo.findById(Integer.parseInt(ids)).get();
+
+				rhd.setAccount(re.getAccount());
+				rhd.setCategory(re.getCategory());
+				rhd.setAmount(re.getAmount());
+				details.add(rhd);
+			}
+			rl.setDetails(details);
+
+		}
+		response.add(rl);
+
+		return response;
 	}
 
 }
