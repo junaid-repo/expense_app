@@ -27,8 +27,16 @@ public class CateService {
 	}
 
 	public CategoryEntity findCategory(String categoryName) {
-		
-		return catRepo.findById(categoryName).get();
+		CategoryEntity ce = new CategoryEntity();
+		try {
+			ce = catRepo.findById(categoryName).get();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			CategoryEntity ce2 = new CategoryEntity();
+			return ce2;
+
+		}
+		return ce;
 	}
 
 }

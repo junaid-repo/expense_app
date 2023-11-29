@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.expense.tracker.records.advice.InvalidRequestData;
 import com.expense.tracker.records.dto.RecordList;
 import com.expense.tracker.records.entity.RecordEntity;
 import com.expense.tracker.records.service.RecordService;
@@ -25,7 +26,7 @@ public class RecordController {
 	RecordService serv;
 
 	@PostMapping("/add")
-	ResponseEntity<String> addRecord(@RequestBody RecordEntity records) {
+	ResponseEntity<String> addRecord(@RequestBody RecordEntity records) throws InvalidRequestData {
 		String response = serv.addRecord(records);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
