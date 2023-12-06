@@ -1,14 +1,20 @@
 package com.expense.tracker.records.service;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.expense.tracker.records.advice.InvalidRequestData;
 import com.expense.tracker.records.apis.RecordFacade;
@@ -20,6 +26,9 @@ import com.expense.tracker.records.repository.RecordHistoryRepository;
 import com.expense.tracker.records.repository.RecordSaveRepository;
 import com.expense.tracker.records.vo.CategoryEntity;
 import com.expense.tracker.records.vo.UpdateBudgetDTO;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvException;
 
 @Service
 public class RecordService {
@@ -41,7 +50,12 @@ public class RecordService {
 
 			RecordEntity res = new RecordEntity();
 			// records.setDate(records.getDate().plusDays(1));
-			res = recordRepo.save(records);
+			try {
+				res = recordRepo.save(records);
+			} catch (Exception e) {
+
+				e.printStackTrace();
+			}
 
 			if (res != null) {
 
@@ -162,6 +176,52 @@ public class RecordService {
 		}
 
 		return true;
+	}
+
+	@Async
+	public CompletableFuture<String> addRecordFromFile(MultipartFile file) throws IOException, CsvException {
+		Reader reader = new InputStreamReader(file.getInputStream());
+
+		CSVReader csvReader = new CSVReaderBuilder(reader).build();
+		List<String[]> rows = csvReader.readAll();
+		int count = 0;
+		List<RecordEntity> reEntity = new ArrayList<>();
+		for (String[] row : rows) {
+			count++;
+
+			if (count > 1) {
+
+				RecordEntity records = new RecordEntity();
+
+				records.setType(row[0]);
+				records.setAccount(row[1]);
+				records.setCategory(row[2]);
+				records.setNotes(row[3]);
+				records.setAmount(Double.parseDouble(row[4]));
+
+				System.out.println(records);
+				reEntity.add(records);
+			}
+
+		}
+
+		long st = System.currentTimeMillis();
+
+		reEntity.stream().parallel().forEach(obj -> {
+			try {
+				addRecord(obj);
+			} catch (InvalidRequestData e) {
+				// TODO Auto-generated catch block
+
+				e.printStackTrace();
+			}
+		});
+
+		long et = System.currentTimeMillis();
+
+		System.out.println("The total time taken ---> " + (et - st));
+
+		return CompletableFuture.completedFuture("Completed");
 	}
 
 }
