@@ -1,5 +1,6 @@
 package com.expense.tracker.budgets.service;
 
+import java.time.Month;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class BudgetService {
 
 	public String setBudget(BudgetEntity bud) {
 		BudgetEntity checkBud = new BudgetEntity();
-		checkBud = getBudget(bud.getCategory());
+		checkBud = getBudget(bud.getCategory(), bud.getMonth());
 		if (checkBud.getId() > 0) {
 			return "budget for the category already saved";
 		}
@@ -29,12 +30,12 @@ public class BudgetService {
 		return "saved";
 	}
 
-	public BudgetEntity getBudget(String bud) {
+	public BudgetEntity getBudget(String bud, Month month) {
 
 		BudgetEntity response = new BudgetEntity();
 		response.setId(0);
 		try {
-			response = budRepo.findByCategory(bud);
+			response = budRepo.findByCategory(bud, month.getValue());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -47,7 +48,7 @@ public class BudgetService {
 
 			return response2;
 		}
-
+		response.setMonth(month);
 		return response;
 	}
 
@@ -68,7 +69,7 @@ public class BudgetService {
 	public String updateBudgetSpent(UpdateBudgetDTO request) {
 
 		BudgetEntity bud = new BudgetEntity();
-		bud = getBudget(request.getCategory());
+		bud = getBudget(request.getCategory(), request.getMonth());
 		Double updatedSpent = bud.getSpent() + request.getSpent();
 		bud.setSpent(updatedSpent);
 		bud.setRemaining(bud.getLimits() - updatedSpent);

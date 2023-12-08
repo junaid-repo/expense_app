@@ -1,5 +1,7 @@
 package com.expense.tracker.budgets.dto;
 
+import java.time.Month;
+
 import lombok.Data;
 
 @Data
@@ -8,4 +10,5 @@ private String category;
 private Double limits;
 private Double spent;
 private Double remaining;
+private Month month;
 }

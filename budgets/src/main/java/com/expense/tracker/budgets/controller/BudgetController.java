@@ -1,5 +1,6 @@
 package com.expense.tracker.budgets.controller;
 
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +36,11 @@ public class BudgetController {
 
 	}
 
-	@GetMapping("/get/{category}")
-	ResponseEntity<BudgetEntity> getBudget(@PathVariable String category) {
+	@GetMapping("/get/{category}/{month}")
+	ResponseEntity<BudgetEntity> getBudget(@PathVariable String category, @PathVariable Month month) {
 
 		BudgetEntity response = new BudgetEntity();
-		response = serv.getBudget(category);
+		response = serv.getBudget(category, month);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
