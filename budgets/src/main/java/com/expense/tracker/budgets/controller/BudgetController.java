@@ -36,8 +36,8 @@ public class BudgetController {
 
 	}
 
-	@GetMapping("/get/{category}/{month}")
-	ResponseEntity<BudgetEntity> getBudget(@PathVariable String category, @PathVariable Month month) {
+	@GetMapping("/get/{month}/{category}")
+	ResponseEntity<BudgetEntity> getBudget(@PathVariable Month month, @PathVariable String category) {
 
 		BudgetEntity response = new BudgetEntity();
 		response = serv.getBudget(category, month);
@@ -46,17 +46,17 @@ public class BudgetController {
 
 	}
 
-	@DeleteMapping("/delete/{category}")
-	ResponseEntity<String> removeBudget(@PathVariable String category) {
-		String response = serv.deleteBudget(category);
+	@DeleteMapping("/delete/{month}/{category}")
+	ResponseEntity<String> removeBudget(@PathVariable Month month, @PathVariable String category) {
+		String response = serv.deleteBudget(category, month);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
-	@GetMapping("/get/all")
-	ResponseEntity<List<BudgetEntity>> getBudgetList() {
+	@GetMapping("/get/{month}/all")
+	ResponseEntity<List<BudgetEntity>> getBudgetList(@PathVariable Month month) {
 		List<BudgetEntity> response = new ArrayList<>();
-		response = serv.getBudgetList();
+		response = serv.getBudgetList(month);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 

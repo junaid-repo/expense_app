@@ -1,6 +1,7 @@
 package com.expense.tracker.budgets.service;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,18 +53,23 @@ public class BudgetService {
 		return response;
 	}
 
-	public String deleteBudget(String category) {
+	public String deleteBudget(String category, Month month) {
 		try {
-			budRepo.deleteByCategory(category);
+			budRepo.deleteByCategory(category, month.getValue());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "deleted";
+		return "deletedd";
 	}
 
-	public List<BudgetEntity> getBudgetList() {
-		return budRepo.findAll();
+	public List<BudgetEntity> getBudgetList(Month month) {
+
+		List<BudgetEntity> response = new ArrayList<>();
+		response = budRepo.findAllByMonth(month.getValue());
+
+		response.stream().forEach(be -> be.setMonth(month));
+		return response;
 	}
 
 	public String updateBudgetSpent(UpdateBudgetDTO request) {
