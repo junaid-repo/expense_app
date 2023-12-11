@@ -100,6 +100,7 @@ public class RecordService {
 				UpdateBudgetDTO updateBud = new UpdateBudgetDTO();
 				updateBud.setCategory(records.getCategory());
 				updateBud.setSpent(records.getAmount());
+				updateBud.setMonth(records.getDate().getMonth());
 				rf.updateSpent(updateBud);
 			}
 		} else {
