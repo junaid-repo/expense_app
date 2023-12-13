@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.expense.tracker.budgets.api.BudgetFacade;
 import com.expense.tracker.budgets.dto.UpdateBudgetDTO;
 import com.expense.tracker.budgets.entity.BudgetEntity;
 import com.expense.tracker.budgets.repository.BudgetRepository;
@@ -16,8 +17,17 @@ public class BudgetService {
 	@Autowired
 	BudgetRepository budRepo;
 
+	@Autowired
+	BudgetFacade bf;
+
 	public String setBudget(BudgetEntity bud) {
 		BudgetEntity checkBud = new BudgetEntity();
+
+		boolean validateCategory = bf.getCategoryDetails(bud.getCategory());
+		if (validateCategory == false) {
+			return "invalid category";
+		}
+
 		checkBud = getBudget(bud.getCategory(), bud.getMonth());
 		if (checkBud.getId() > 0) {
 			return "budget for the category already saved";
@@ -28,6 +38,7 @@ public class BudgetService {
 		budRepo.save(bud);
 
 		return "saved";
+
 	}
 
 	public BudgetEntity getBudget(String bud, Month month) {

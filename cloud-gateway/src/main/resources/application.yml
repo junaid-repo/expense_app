@@ -49,6 +49,27 @@ spring:
             - Path=/expense/user/**
             filters:
             - AuthenticationFilter
+            
+         -  id: SUSER-SERVICE
+            uri: lb://SUSER-SERVICE
+            predicates:
+            - Path=/sw/users/**
+            filters:
+            - AuthenticationFilter
+
+         -   id: SGROUPS-SERVICE
+             uri: lb://SGROUPS-SERVICE
+             predicates:
+             - Path=/sw/groups/**
+             filters:
+             - AuthenticationFilter
+
+         -   id: SBILLS-SERVICE
+             uri: lb://SBILLS-SERVICE
+             predicates:
+             - Path=/sw/bills/** 
+             filters:
+             - AuthenticationFilter         
 
 eureka:
    client:
