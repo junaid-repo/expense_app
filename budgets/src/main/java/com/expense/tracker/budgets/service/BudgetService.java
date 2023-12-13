@@ -46,7 +46,8 @@ public class BudgetService {
 		BudgetEntity response = new BudgetEntity();
 		response.setId(0);
 		try {
-			response = budRepo.findByCategory(bud, month.getValue());
+			response = budRepo.findByCategory(bud, month.getValue()-1);
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

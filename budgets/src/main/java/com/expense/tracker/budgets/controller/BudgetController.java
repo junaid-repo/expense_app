@@ -20,19 +20,36 @@ import com.expense.tracker.budgets.dto.UpdateBudgetDTO;
 import com.expense.tracker.budgets.entity.BudgetEntity;
 import com.expense.tracker.budgets.service.BudgetService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @RestController
 @RequestMapping("/expense/budgets")
 public class BudgetController {
 
 	@Autowired
 	BudgetService serv;
+	
+	
 
 	@PostMapping("/set")
+	@CircuitBreaker(name = "setBudgetCB", fallbackMethod = "fbmForSetBudget")
+	// @RateLimiter(name = "setBudgetRL", fallbackMethod = "fbmForSetBudget")
 	ResponseEntity<String> setBudget(@RequestBody BudgetEntity bud) {
 
 		String response = serv.setBudget(bud);
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
+
+	}
+
+	int countRetry = 0;
+
+	ResponseEntity<String> fbmForSetBudget(BudgetEntity bud, Exception ex) {
+		System.out.println("Retrying this number of time-->  " + countRetry);
+
+		return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("the dependent server is down");
+		// return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("only 2 hit to
+		// category service is permitted");
 
 	}
 

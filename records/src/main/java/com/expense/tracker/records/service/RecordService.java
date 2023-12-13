@@ -210,6 +210,7 @@ public class RecordService {
 
 		reEntity.stream().parallel().forEach(obj -> {
 			try {
+				log.info("the request data from csv file is --> "+obj.toString());
 				addRecord(obj);
 			} catch (InvalidRequestData e) {
 				// TODO Auto-generated catch block

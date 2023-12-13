@@ -24,3 +24,25 @@ management:
   tracing:
     sampling:
       probability: 1.0
+      
+resilience4j:
+  circuitbreaker:
+    instances:
+      setBudgetCB:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 1
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+        
+  ratelimiter:
+    instances:
+      setBudgetRL:
+        limit-refresh-period: 4s
+        limit-for-period: 2
+        timeout-duration: 2s   
+     
