@@ -24,3 +24,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+      
+      
+mailjetPublicKey: a2ee6a9262b90456d0d1bca5f6a8e936
+mailjetPrivateKey: b98854ed107194bc54eff09404454727

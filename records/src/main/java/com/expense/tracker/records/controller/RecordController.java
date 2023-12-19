@@ -47,12 +47,10 @@ public class RecordController {
 	}
 
 	@PostMapping("/add/csv")
-	ResponseEntity<CompletableFuture<String>> addRecordFromCSV(@RequestParam MultipartFile file) throws IOException, CsvException {
+	ResponseEntity<CompletableFuture<String>> addRecordFromCSV(@RequestParam MultipartFile file)
+			throws IOException, CsvException {
 
-		
-		CompletableFuture<String> rows=serv.addRecordFromFile(file);
-		
-		
+		CompletableFuture<String> rows = serv.addRecordFromFile(file);
 
 		return ResponseEntity.status(HttpStatus.OK).body(rows);
 

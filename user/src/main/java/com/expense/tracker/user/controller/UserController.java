@@ -1,5 +1,8 @@
 package com.expense.tracker.user.controller;
 
+import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.expense.tracker.user.dto.AuthRequest;
 import com.expense.tracker.user.dto.RegisterResponse;
@@ -39,6 +43,14 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@PostMapping("/auth/register/bulk")
+	ResponseEntity<CompletableFuture<String>> registerBulkUser(@RequestBody MultipartFile file) throws IOException {
+
+		CompletableFuture<String> response = serv.registerBulkUser(file);
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+	}
+
 	@PostMapping("/auth/generateToken")
 	ResponseEntity<String> generateToken(@RequestBody AuthRequest creds) {
 		Authentication authenticate = authenticationManager
@@ -60,6 +72,7 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.OK).body("token is valid");
 	}
+
 	@GetMapping("/auth/checkUserAccess")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	String checkUser() {

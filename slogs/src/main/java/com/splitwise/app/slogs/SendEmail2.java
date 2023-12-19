@@ -19,18 +19,22 @@ public class SendEmail2 {
 		MailjetClient client;
 		MailjetRequest request;
 		MailjetResponse response;
-		client = new MailjetClient("318c84dd71aef348d900be5cacf99be9", "2d06252cc41a476fe0c7a0bbc6ca601d");
-		request = new MailjetRequest(Email.resource).property(Email.FROMEMAIL, "shop@ranchinovelstore.com")
-				.property(Email.FROMNAME, "Mailjet Pilot").property(Email.SUBJECT, "Your email flight plan!")
-				.property(Email.TEXTPART, "Dear passenger, welcome to Mailjet! May the delivery force be with you!")
-				.property(Email.HTMLPART,
-						"<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!")
+		client = new MailjetClient("a2ee6a9262b90456d0d1bca5f6a8e936", "b98854ed107194bc54eff09404454727");
+		for (int i = 0; i < 5; i++) {
+			request = new MailjetRequest(Email.resource).property(Email.FROMEMAIL, "admin"+String.valueOf(i)+"@friendsmobile.store")
+					.property(Email.FROMNAME, "Friends Mobile").property(Email.SUBJECT, "We provide a great value!")
+					.property(Email.TEXTPART,
+							"Dear passenger, welcome to Friends Mobile! May the delivery force be with you!")
+					.property(Email.HTMLPART,
+							"<h3>Dear passenger, welcome to <a href=\"friendsmobile.store/\">Friends Mobile</a>!<br />May the delivery force be with you!")
 
-				.property(Email.RECIPIENTS,
-						new JSONArray().put(new JSONObject().put("Email", "junaidrana926@gmail.com")));
+					.property(Email.RECIPIENTS,
+							new JSONArray().put(new JSONObject().put("Email", "junaidrana926@gmail.com")));
 
-		response = client.post(request);
-		System.out.println(response.getStatus());
-		System.out.println(response.getData());
+			response = client.post(request);
+
+			System.out.println(response.getStatus());
+			System.out.println(response.getData());
+		}
 	}
 }
